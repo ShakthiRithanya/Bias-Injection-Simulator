@@ -44,3 +44,4 @@ The product feels like:
 - Implemented Holographic Background
 - Added CyberSphere 3D Component
 - Refactored Global Layout
+- Integrated Tailwind CSS v4
