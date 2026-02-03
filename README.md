@@ -50,3 +50,4 @@ The product feels like:
 - Created Neural Network Visualization
 - Optimized Rendering Performance
 - Added Warp Tunnel Effect
+- Updated Landing Page Typography
