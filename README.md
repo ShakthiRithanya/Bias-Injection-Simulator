@@ -49,3 +49,4 @@ The product feels like:
 - Designed Glassmorphism UI Panels
 - Created Neural Network Visualization
 - Optimized Rendering Performance
+- Added Warp Tunnel Effect
