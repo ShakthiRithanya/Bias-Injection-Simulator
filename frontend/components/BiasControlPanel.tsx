@@ -1,67 +1,107 @@
 "use client";
 import React, { useState } from 'react';
+import Link from 'next/link';
+import { useRouter } from 'next/navigation';
 
-export default function BiasControlPanel() {
+interface BiasControlPanelProps {
+    mode?: 'full' | 'upload' | 'inject';
+}
+
+export default function BiasControlPanel({ mode = 'full' }: BiasControlPanelProps) {
     const [samplingBias, setSamplingBias] = useState(0);
     const [labelBias, setLabelBias] = useState(0);
+    const router = useRouter();
 
     return (
-        <section className="glass-panel flex flex-col gap-6 p-6 h-full">
+        <section className="glass-panel flex flex-col gap-6 p-6 h-full max-w-2xl mx-auto w-full">
             <header>
-                <h1 className="text-[var(--neon-cyan)] font-mono text-xl mb-2 leading-tight">
-                    BIAS INJECTION<br />SIMULATOR
+                <h1 className="text-neon-cyan font-mono text-xl mb-2 leading-tight">
+                    {mode === 'upload' && 'STEP 01: INGESTION'}
+                    {mode === 'inject' && 'STEP 02: INJECTION'}
+                    {mode === 'full' && 'BIAS CONTROL'}
                 </h1>
-                <div className="h-0.5 w-20 bg-[var(--neon-cyan)] shadow-[0_0_10px_var(--neon-cyan)]"></div>
+                <div className="h-0.5 w-20 bg-cyan shadow-glow" style={{ background: 'var(--neon-cyan)', boxShadow: '0 0 10px var(--neon-cyan)' }}></div>
             </header>
 
-            <div className="space-y-4">
-                <h2 className="font-mono text-xs text-gray-400 uppercase tracking-widest">Dataset Ingestion</h2>
-                <div className="border border-dashed border-gray-700 bg-black/20 rounded-lg p-8 text-center cursor-pointer hover:bg-white/5 transition group">
-                    <div className="text-gray-500 group-hover:text-white transition">drag_and_drop.csv</div>
+            {(mode === 'full' || mode === 'upload') && (
+                <div className="space-y-4 animate-in fade-in slide-in-from-bottom-4 duration-500">
+                    <h2 className="font-mono text-xs text-muted uppercase tracking-widest">Dataset Ingestion</h2>
+                    <div className="control-card border-dashed border border-gray-700 bg-black/20 text-center cursor-pointer hover:bg-white/5 group h-48 flex flex-col items-center justify-center">
+                        <div className="text-muted group-hover:text-white transition flex flex-col items-center justify-center p-4">
+                            <span className="text-4xl mb-2 opacity-50">+</span>
+                            <span className="font-mono text-xs tracking-widest">DRAG_AND_DROP.csv</span>
+                        </div>
+                    </div>
                 </div>
+            )}
+
+            {(mode === 'full' || mode === 'inject') && (
+                <div className="space-y-4 mt-4 animate-in fade-in slide-in-from-bottom-4 duration-700 delay-100">
+                    <h2 className="font-mono text-xs text-muted uppercase tracking-widest">Injection Protocols</h2>
+
+                    {/* Sampling Bias Control */}
+                    <div className="control-card">
+                        <div className="flex justify-between items-center mb-3">
+                            <span className="text-sm font-semibold">Sampling Bias</span>
+                            <div className="w-2 h-2 rounded-full" style={{ background: 'var(--neon-cyan)', boxShadow: '0 0 5px var(--neon-cyan)' }}></div>
+                        </div>
+                        <input
+                            type="range"
+                            min="0" max="100"
+                            value={samplingBias}
+                            onChange={(e) => setSamplingBias(Number(e.target.value))}
+                            className="range-cyan"
+                        />
+                        <div className="flex justify-between text-xs text-muted mt-2 font-mono">
+                            <span>CLEAN</span>
+                            <span className="text-neon-cyan">CRITICAL</span>
+                        </div>
+                    </div>
+
+                    {/* Label Bias Control */}
+                    <div className="control-card">
+                        <div className="flex justify-between items-center mb-3">
+                            <span className="text-sm font-semibold">Label Corruption</span>
+                            <div className="w-2 h-2 rounded-full" style={{ background: 'var(--neon-pink)', boxShadow: '0 0 5px var(--neon-pink)' }}></div>
+                        </div>
+                        <input
+                            type="range"
+                            min="0" max="100"
+                            value={labelBias}
+                            onChange={(e) => setLabelBias(Number(e.target.value))}
+                            className="range-pink"
+                        />
+                        <div className="flex justify-between text-xs text-muted mt-2 font-mono">
+                            <span>CLEAN</span>
+                            <span className="text-neon-pink">FATAL</span>
+                        </div>
+                    </div>
+                </div>
+            )}
+
+            <div className="mt-auto pt-6">
+                {mode === 'upload' && (
+                    <Link href="/inject">
+                        <button className="btn-primary text-center">
+                            PROCEED TO INJECTION &gt;&gt;
+                        </button>
+                    </Link>
+                )}
+
+                {mode === 'inject' && (
+                    <Link href="/monitor">
+                        <button className="btn-primary text-center">
+                            INITIATE EXPERIMENT &gt;&gt;
+                        </button>
+                    </Link>
+                )}
+
+                {mode === 'full' && (
+                    <button className="btn-primary text-center">
+                        INITIATE EXPERIMENT
+                    </button>
+                )}
             </div>
-
-            <div className="space-y-4 mt-4">
-                <h2 className="font-mono text-xs text-gray-400 uppercase tracking-widest">Injection Protocols</h2>
-
-                {/* Sampling Bias Control */}
-                <div className="p-4 bg-black/20 rounded border border-white/5 hover:border-white/20 transition">
-                    <div className="flex justify-between items-center mb-3">
-                        <span className="text-sm font-semibold">Sampling Bias</span>
-                        <div className="w-2 h-2 rounded-full bg-gray-600"></div>
-                    </div>
-                    <input
-                        type="range"
-                        min="0" max="100"
-                        value={samplingBias}
-                        onChange={(e) => setSamplingBias(Number(e.target.value))}
-                        className="w-full accent-[var(--neon-cyan)] h-1 bg-gray-700 rounded-lg appearance-none cursor-pointer"
-                    />
-                    <div className="flex justify-between text-xs text-gray-500 mt-2 font-mono">
-                        <span>CLEAN</span>
-                        <span>CRITICAL</span>
-                    </div>
-                </div>
-
-                {/* Label Bias Control */}
-                <div className="p-4 bg-black/20 rounded border border-white/5 hover:border-white/20 transition">
-                    <div className="flex justify-between items-center mb-3">
-                        <span className="text-sm font-semibold">Label Corruption</span>
-                        <div className="w-2 h-2 rounded-full bg-gray-600"></div>
-                    </div>
-                    <input
-                        type="range"
-                        min="0" max="100"
-                        value={labelBias}
-                        onChange={(e) => setLabelBias(Number(e.target.value))}
-                        className="w-full accent-[var(--neon-pink)] h-1 bg-gray-700 rounded-lg appearance-none cursor-pointer"
-                    />
-                </div>
-            </div>
-
-            <button className="mt-auto btn-primary text-center">
-                INITIATE EXPERIMENT
-            </button>
         </section>
     );
 }
