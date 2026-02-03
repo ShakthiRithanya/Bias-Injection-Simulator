@@ -43,3 +43,4 @@ The product feels like:
 * **Charts**: D3.js / Recharts
 - Implemented Holographic Background
 - Added CyberSphere 3D Component
+- Refactored Global Layout
