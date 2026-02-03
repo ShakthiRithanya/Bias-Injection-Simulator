@@ -45,3 +45,4 @@ The product feels like:
 - Added CyberSphere 3D Component
 - Refactored Global Layout
 - Integrated Tailwind CSS v4
+- Added PostCSS Configuration
