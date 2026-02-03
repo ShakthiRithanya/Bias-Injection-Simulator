@@ -42,3 +42,4 @@ The product feels like:
 * **3D**: Three.js / React Three Fiber
 * **Charts**: D3.js / Recharts
 - Implemented Holographic Background
+- Added CyberSphere 3D Component
